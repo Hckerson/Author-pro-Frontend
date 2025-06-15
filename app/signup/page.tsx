@@ -40,12 +40,23 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailAvailable, setIsEmailAvailable] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
-  const [formData, setFormData] = useState({
+  
+  type FormData = {
+    email: string;
+    password: string;
+    username: string;
+    phone: string;
+    dialCode: string;
+    role: "READER" | "WRITER" | "ADMIN";
+  };
+
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
     username: "",
     phone: "",
     dialCode: "",
+    role: "READER",
   });
 
   // Password validation states
@@ -94,9 +105,6 @@ export default function SignupPage() {
     }
   }, [isEmailAvailable]);
 
-
-
-
   const debounced = useDebouncedCallback(
     // function
     async () => {
@@ -105,7 +113,7 @@ export default function SignupPage() {
       );
       if (response.data.message == "found") {
         setIsEmailAvailable(false);
-        setDisabled(true);  
+        setDisabled(true);
       } else {
         setIsEmailAvailable(true);
       }
@@ -124,8 +132,15 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      if (!validations.length || !validations.letter || !validations.number || !validations.special) {
-        toast.error("Password must be at least 8 characters long and contain at least one letter, one number, and one special character.");
+      if (
+        !validations.length ||
+        !validations.letter ||
+        !validations.number ||
+        !validations.special
+      ) {
+        toast.error(
+          "Password must be at least 8 characters long and contain at least one letter, one number, and one special character."
+        );
         setIsLoading(false);
         return;
       }
@@ -232,7 +247,10 @@ export default function SignupPage() {
                               value={country.name}
                               onSelect={() => {
                                 setSelectedCountry(country);
-                                setFormData((prev) => ({ ...prev, dialCode: country.dialCode }));
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  dialCode: country.dialCode,
+                                }));
                               }}
                             >
                               <span className="flex items-center gap-2">
@@ -266,6 +284,51 @@ export default function SignupPage() {
                     className="flex-1"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role">Role</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className="w-full justify-between"
+                    >
+                      {formData.role.charAt(0).toUpperCase() +
+                        formData.role.slice(1)}
+                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandGroup>
+                        <CommandItem
+                          value="READER"
+                          onSelect={() => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              role: "READER",
+                            }));
+                          }}
+                        >
+                          Reader
+                        </CommandItem>
+                        <CommandItem
+                          value="WRITER"
+                          onSelect={() => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              role: "WRITER",
+                            }));
+                          }}
+                        >
+                          Writer
+                        </CommandItem>
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
 
               <div className="space-y-2">
@@ -341,7 +404,11 @@ export default function SignupPage() {
             </div>
 
             <Button className="w-full" type="submit" disabled={disabled}>
-              {isLoading ? <PulseLoader color="#000000" size={10} className="text-white" /> : "Create Account"}
+              {isLoading ? (
+                <PulseLoader color="#000000" size={10} className="text-white" />
+              ) : (
+                "Create Account"
+              )}
             </Button>
 
             <div className="relative">

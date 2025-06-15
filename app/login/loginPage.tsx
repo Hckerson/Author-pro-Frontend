@@ -3,6 +3,17 @@ import * as z from "zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
+import { ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/dropdown-menu";
+
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
@@ -31,17 +42,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription
 } from "@/components/ui/form";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
+  role: z.enum(["READER", "WRITER", "ADMIN"], { 
+    required_error: "Please select a role" 
+  }),
   password: z.string().min(8, "Password must be at least 8 characters"),
   rememberMe: z.boolean().default(false),
 });
 
-
-
-export default function LoginPage({error}: {error: string}) {
+export default function LoginPage({ error }: { error: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
@@ -66,6 +79,7 @@ export default function LoginPage({error}: {error: string}) {
     defaultValues: {
       email: "",
       password: "",
+      role: "READER",
       rememberMe: false,
     },
   });
@@ -73,23 +87,42 @@ export default function LoginPage({error}: {error: string}) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      // Simulate backend call
       const result = await signIn(values);
-      if (!result){
+      if (!result) {
         return;
       }
 
       if ("message" in result && result.message == "not_local") {
-        toast.error("This is not a local account. Please login with " + result.provider, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(
+          "This is not a local account. Please login with " + result.provider,
+          {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          }
+        );
+        return;
+      }
+
+      if ("message" in result && result.message == "failed") {
+        toast.error(
+          `The account ${result.email} is not registered as a ${result.role}`,
+          {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          }
+        );
         return;
       }
 
@@ -104,7 +137,7 @@ export default function LoginPage({error}: {error: string}) {
           progress: undefined,
           theme: "light",
         });
-        router.push("/contact");
+        router.push("/blog");
       } else {
         toast.error("Invalid credentials. Please try again.");
       }
@@ -145,6 +178,47 @@ export default function LoginPage({error}: {error: string}) {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role</FormLabel>
+                    <FormControl>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="w-full justify-between"
+                          >
+                            {field.value || "Select role"}
+                            <ChevronDown className="h-4 w-4 opacity-50" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-full">
+                          <DropdownMenuLabel>User Role</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuRadioGroup
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <DropdownMenuRadioItem value="READER">
+                              Reader
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="WRITER">
+                              Writer
+                            </DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </FormControl>
+                    <FormDescription>
+                      Select your role to access appropriate features
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -238,17 +312,27 @@ export default function LoginPage({error}: {error: string}) {
           </div>
 
           <div className="grid gap-2">
-            <Button variant="outline" type="button" disabled={isLoading} onClick={() => loginGithub()}>
+            <Button
+              variant="outline"
+              type="button"
+              disabled={isLoading}
+              onClick={() => loginGithub()}
+            >
               <Github className="mr-2 h-4 w-4" />
               Github
             </Button>
           </div>
           <div className="grid gap-2 mt-3">
-            <Button variant="outline" type="button" disabled={isLoading} onClick={() => login()}>
+            <Button
+              variant="outline"
+              type="button"
+              disabled={isLoading}
+              onClick={() => login()}
+            >
               <FaGoogle className="mr-2 h-4 w-4" />
               Google
             </Button>
-          </div>    
+          </div>
         </CardContent>
         <CardFooter>
           <p className="text-sm text-muted-foreground text-center w-full">

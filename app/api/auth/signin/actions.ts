@@ -4,19 +4,21 @@ import { cookies } from "next/headers";
 import prisma from "@/prisma/connections";
 import { sendMessage } from "@/app/api/services/nodemailer/send_message";
 import { encrypt } from "@/lib/encryption";
-import { redis_set } from "@/app/api/services/redis/connection";
 
 export async function signIn(data: {
   email: string;
+  role: "READER" | "WRITER" | "ADMIN";
   password: string;
   rememberMe: boolean;
 }) {
   //receive signin data and create session for users
-  const { email, password, rememberMe } = data;
+  const { email, password, rememberMe, role } = data;
   try {
-    const user = await prisma.user.findUnique({ where: { email: email } });
+    const user = await prisma.user.findUnique({
+      where: { email: email, role: role },
+    });
     if (user == null) {
-      return { message: "failed", status: 400, provider: null };
+      return { message: "failed", status: 400, email: email, role: role };
     }
     const { provider } = user;
     if (provider == "google") {
@@ -37,7 +39,7 @@ export async function signIn(data: {
           await sendMessage(
             email,
             "2FA Verification Code",
-            `Your verification code is _______. This code will expire in 2 minutes.`,
+            `Your verification code is _______. This code will expire in 2 minutes.`
           );
           return new Response(null, {
             status: 302,
@@ -47,7 +49,7 @@ export async function signIn(data: {
           });
         } else {
           const expiresAt = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
-          const [session_data] = await prisma.session.createManyAndReturn({
+          const session_data = await prisma.session.create({
             data: { userId: id, expires: expiresAt },
           });
           const { id: sessionId, userId } = session_data;
@@ -61,7 +63,6 @@ export async function signIn(data: {
             sameSite: "lax",
             path: "/",
           });
-          redis_set("userId", userId.toString());
           return { message: "success", status: 200, provider: "local" };
         }
       } else {

@@ -1,40 +1,47 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { Calendar, Clock, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import ShareButtons from '@/components/blog/ShareButtons';
-import NewsletterSignup from '@/components/common/NewsletterSignup';
-import RelatedPosts from '@/components/blog/RelatedPosts';
-import { getPostBySlug, getRelatedPosts } from '@/lib/data/posts';
+import axios from "axios";
+import Link from "next/link";
+import Image from "next/image";
+import { Post } from "@/types/blog";
+import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import ShareButtons from "@/components/blog/ShareButtons";
+import RelatedPosts from "@/components/blog/RelatedPosts";
+import { getPostBySlug, getRelatedPosts } from "@/lib/data/posts";
+import NewsletterSignup from "@/components/common/NewsletterSignup";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Calendar, Clock, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
-
-  if (!post) {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { title, slug } = await searchParams;
+  if (!title) {
     return {
-      title: 'Post Not Found',
+      title: "Title Not Found",
     };
   }
-
   return {
-    title: `${post.title} | Author Blog`,
-    description: post.excerpt,
+    title: `${title} | Author Blog`,
+    description: slug,
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({
+  params
+}: {
+  params: { slug: string };
+}) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-
+  const response = await axios.get(`http://localhost:4000/posts/${slug}`);
+  const post: Post = response.data;
   if (!post) {
     return notFound();
   }
-  
-  const relatedPosts = await getRelatedPosts(post.slug, post.categories);
+
+  // const relatedPosts = await getRelatedPosts(post.slug, post.categories);
 
   return (
     <div className="fade-in">
@@ -42,10 +49,10 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <article>
         <div className="relative h-[40vh] lg:h-[50vh]">
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-transparent z-10" />
-          <Image 
-            src={post.coverImage} 
-            alt={post.title} 
-            fill 
+          <Image
+            src={`${post.coverImg}`}
+            alt={post.title}
+            fill
             className="object-cover"
             priority
           />
@@ -62,7 +69,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div className="flex items-center gap-6 text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span>{post.date}</span>
+                  <span>{post.date.split("T")[0]}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
@@ -80,24 +87,28 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div className="prose dark:prose-invert max-w-none">
                 {post.content}
               </div>
-              
+
               <div className="mt-12 pt-8 border-t">
                 <ShareButtons title={post.title} />
               </div>
-              
+
               <div className="mt-12 flex items-center p-6 bg-muted/30 rounded-lg">
                 <Avatar className="h-16 w-16 mr-6">
-                  <AvatarImage src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg" alt="Author" />
+                  <AvatarImage
+                    src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
+                    alt="Author"
+                  />
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <div>
                   <h3 className="text-xl font-bold mb-2">John Doe</h3>
                   <p className="text-muted-foreground">
-                    Author, blogger, and storyteller passionate about crafting narratives that inspire and connect.
+                    Author, blogger, and storyteller passionate about crafting
+                    narratives that inspire and connect.
                   </p>
                 </div>
               </div>
-              
+
               <div className="mt-12 flex justify-between">
                 <Button asChild variant="ghost">
                   <Link href="/blog">
@@ -122,7 +133,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 </div>
               </div>
             </div>
-            
+
             <div className="lg:w-1/3">
               <div className="sticky top-24">
                 <div className="bg-card rounded-lg shadow-md p-6 mb-8">
@@ -132,25 +143,29 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   </p>
                   <NewsletterSignup />
                 </div>
-                
+
                 <div className="bg-card rounded-lg shadow-md p-6 mb-8">
                   <h3 className="text-lg font-medium mb-4">Categories</h3>
                   <div className="flex flex-wrap gap-2">
                     {post.categories.map((category) => (
-                      <Badge key={category} variant="outline" className="py-1.5">
+                      <Badge
+                        key={category}
+                        variant="outline"
+                        className="py-1.5"
+                      >
                         <Tag className="h-3.5 w-3.5 mr-1" />
                         {category}
                       </Badge>
                     ))}
                   </div>
                 </div>
-                
-                {relatedPosts.length > 0 && (
+
+                {/* {relatedPosts.length > 0 && (
                   <div className="bg-card rounded-lg shadow-md p-6">
                     <h3 className="text-lg font-medium mb-4">Related Posts</h3>
                     <RelatedPosts posts={relatedPosts} />
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>

@@ -30,22 +30,22 @@ export default function AboutPage() {
                 Author, storyteller, and creative mind based in New York City.
               </p>
               <div className="flex gap-4 mb-8">
-                <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                <Link href="https://twitter.com/hckerson_jnr" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                   <Button variant="outline" size="icon" className="rounded-full">
                     <Twitter className="h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <Link href="https://instagram.com/hckerson_jnr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                   <Button variant="outline" size="icon" className="rounded-full">
                     <Instagram className="h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <Link href="https://facebook.com/hckerson_jnr" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                   <Button variant="outline" size="icon" className="rounded-full">
                     <Facebook className="h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <Link href="https://linkedin.com/hckerson_jnr" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                   <Button variant="outline" size="icon" className="rounded-full">
                     <Linkedin className="h-5 w-5" />
                   </Button>

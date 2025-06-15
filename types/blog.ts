@@ -4,11 +4,11 @@ export interface Post {
   excerpt: string;
   content: string | React.ReactNode;
   date: string;
-  coverImage: string;
+  coverImg: string;
   readingTime: number;
+  featured: boolean;
   categories: string[];
-  tags?: string[];
-  status?: 'draft' | 'published';
+  status?: 'DRAFTED' | 'PUBLISHED';
   author?: {
     name: string;
     image: string;

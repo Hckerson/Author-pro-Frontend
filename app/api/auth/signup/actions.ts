@@ -10,6 +10,7 @@ export async function signUp(formData: {
   password: string;
   username: string;
   phone: string;
+  role: "READER" | "WRITER" | "ADMIN"
   dialCode: string;
 }) {
   const hashedPassword = await bcrypt.hash(formData.password, SALT);
@@ -20,12 +21,13 @@ export async function signUp(formData: {
   const isLocal = true;
 
   try {
-    const [client] = await prisma.user.createManyAndReturn({
+    const client = await prisma.user.create({
       data: {
         email: formData.email,
         password: hashedPassword,
         username: formData.username,
         phone: phoneNumber,
+        role: formData.role,
         status: status,
         localStatus: isLocal,
       },

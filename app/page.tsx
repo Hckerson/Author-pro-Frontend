@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
-import { useEffect } from "react";
+import { Post } from "@/types/blog";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   ArrowRight,
@@ -15,22 +15,62 @@ import {
 import FeaturedPostCard from "@/components/blog/FeaturedPostCard";
 import NewsletterSignup from "@/components/common/NewsletterSignup";
 import { Button } from "@/components/ui/button";
-import { featuredPosts } from "@/lib/data/posts";
 
 export default function Home() {
+  const [posts, setposts] = useState<Post[]>();
   useEffect(() => {
     const fetchFeaturedPosts = async () => {
       try {
         const response = await axios.get("http://localhost:4000/posts", {
           withCredentials: true,
         });
-        console.log(response.data);
+        const allPost = response.data;
+        const posts = [];
+        for (let i = 0; i < allPost.length; i++) {
+          const currentPost = allPost[i];
+          const post = {
+            title: currentPost.title,
+            slug: currentPost.slug,
+            excerpt: currentPost.excerpt,
+            content: currentPost.content,
+            date: currentPost.date.split("T")[0],
+            coverImg: currentPost.coverImg,
+            readingTime: currentPost.readingTime,
+            categories: currentPost.categories,
+            featured: currentPost.featured,
+            status: currentPost.status,
+            author: {
+              name: currentPost.author,
+              image: currentPost.authorimage,
+            },
+            previousPost:
+              i > 0
+                ? {
+                    title: allPost[i - 1].title,
+                    slug: allPost[i - 1].slug,
+                  }
+                : undefined,
+            nextPost:
+              i < allPost.lenght - 1
+                ? {
+                    title: allPost[i + 1].title,
+                    slug: allPost[i + 1].slug,
+                  }
+                : undefined,
+          };
+          posts.push(post);
+        }
+        setposts(posts);
       } catch (error) {
         console.log(`Error fetching post`);
       }
     };
     fetchFeaturedPosts();
   }, []);
+  useEffect(() => {
+    console.log(posts?.[1].categories);
+  });
+
   return (
     <div className="fade-in">
       {/* Hero Section */}
@@ -121,7 +161,7 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {featuredPosts.slice(0, 3).map((post) => (
+            {posts?.slice(0, 3).map((post) => (
               <div key={post.slug} className="scale-in">
                 <FeaturedPostCard post={post} />
               </div>

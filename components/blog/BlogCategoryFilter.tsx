@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-interface BlogCategoryFilterProps {
+export interface BlogCategoryFilterProps {
   categories: { name: string; count: number }[];
 }
 
@@ -77,7 +77,7 @@ export default function BlogCategoryFilter({ categories }: BlogCategoryFilterPro
       </div>
       
       <div className="flex space-x-2">
-        <Button onClick={applyFilters} size="sm" className="w-full">
+        <Button onClick={applyFilters} size="sm" className="w-full ">
           Apply
         </Button>
         {selectedCategories.length > 0 && (

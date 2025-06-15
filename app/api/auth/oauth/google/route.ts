@@ -29,6 +29,7 @@ export async function GET(request: Request) {
     where: { email: email as string },
   });
   if (user_email == null) {
+    console.log(`New user`)
     const user = await prisma.user.create({
       data: {
         email: email as string,
@@ -58,17 +59,18 @@ export async function GET(request: Request) {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/contact",
+          Location: "/blog",
         },
       });
     }
   } else {
+    console.log(`Existing user`)
     const user = await prisma.user.findUnique({
-      where: { email: email as string, localStatus: false },
+      where: { email: email as string, localStatus: false, provider: 'google' },
     });
     if (user) {
       const { id } = user;
-      const [session_data] = await prisma.session.createManyAndReturn({
+      const session_data = await prisma.session.create({
         data: { userId: id, expires: expiresAt },
       });
       const { id: sessionId, userId } = session_data;
@@ -85,7 +87,7 @@ export async function GET(request: Request) {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/contact",
+          Location: "/blog",
         },
       });
     } else {

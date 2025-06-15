@@ -26,7 +26,7 @@ export async function verifyMail(email: string, id: string) {
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background-color: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0; font-size: 24px;">Welcome to our platform! Finadvise</h1>
+              <h1 style="color: #2563eb; margin: 0; font-size: 24px;">Welcome to our platform! AuthorPro</h1>
               <p style="color: #6b7280; margin-top: 10px;">Thank you for signing up with us</p>
             </div>
             

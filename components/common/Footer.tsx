@@ -18,22 +18,22 @@ export default function Footer() {
               Author, blogger, and storyteller dedicated to bringing imagination to life through words.
             </p>
             <div className="flex space-x-2">
-              <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <Link href="https://twitter.com/hckerson_jnr" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
                   <Twitter className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <Link href="https://facebook.com/hckerson.jnr" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
                   <Facebook className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <Link href="https://instagram.com/hckerson_jnr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
                   <Instagram className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <Link href="https://linkedin.com/hckerson" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
                   <Linkedin className="h-4 w-4" />
                 </Button>
@@ -117,20 +117,20 @@ export default function Footer() {
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-accent mr-2 mt-0.5" />
                 <span className="text-muted-foreground">
-                  123 Author Street,<br />
-                  New York, NY 10001
+                  Hebzibah street,<br />
+                  Lagos, Nigeria
                 </span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-accent mr-2" />
-                <a href="mailto:contact@authorname.com" className="text-muted-foreground hover:text-accent transition-colors">
+                <a href="mailto:contact@hckerson@gmail.com" className="text-muted-foreground hover:text-accent transition-colors">
                   contact@authorname.com
                 </a>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-accent mr-2" />
-                <a href="tel:+12345678901" className="text-muted-foreground hover:text-accent transition-colors">
-                  +1 (234) 567-8901
+                <a href="tel:+2349125194271" className="text-muted-foreground hover:text-accent transition-colors">
+                  +234 9125194271
                 </a>
               </li>
             </ul>
@@ -143,7 +143,7 @@ export default function Footer() {
       <div className="container py-6">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} Author Name. All rights reserved.
+            &copy; {currentYear} Hckerson. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link href="/legal/privacy" className="text-sm text-muted-foreground hover:text-accent transition-colors">

@@ -22,25 +22,40 @@ enum Role {
 }
 
 enum Status {
-  PENDING
-  APPROVED
-  REJECTED
+  DRAFTED
+  PUBLISHED
 }
 
 model User {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  email       String      @unique
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  email       String    @unique
   password    String?
   provider    String?
   username    String?
-  status      String      @default("unverified")
-  localStatus Boolean     @default(true)
+  status      String    @default("unverified")
+  localStatus Boolean   @default(true)
   phone       String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   avatar      Avatar[]
-  role        Role        @default(READER)
+  role        Role      @default(READER)
   sessions    Session[]
+}
+
+model Post {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  status      Status   @default(DRAFTED)
+  date        DateTime @default(now())
+  featured    Boolean  @default(false)
+  coverImg    String
+  readingTime String
+  categories  String[]
+  author      String
+  authorImg   String
 }
 
 model Avatar {
@@ -51,7 +66,6 @@ model Avatar {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 model Session {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId

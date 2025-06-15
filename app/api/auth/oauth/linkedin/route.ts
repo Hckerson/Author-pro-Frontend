@@ -58,17 +58,17 @@ export async function GET(request: Request) {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/contact",
+          Location: "/blog",
         },
       });
     }
   } else {
     const user = await prisma.user.findUnique({
-      where: { email: email as string, localStatus: false },
+      where: { email: email as string, localStatus: false, provider: 'linkedin' },
     });
     if (user) {
       const { id } = user;
-      const [session_data] = await prisma.session.createManyAndReturn({
+      const session_data = await prisma.session.create({
         data: { userId: id, expires: expiresAt },
       });
       const { id: sessionId, userId } = session_data;
@@ -85,7 +85,7 @@ export async function GET(request: Request) {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/contact",
+          Location: "/blog",
         },
       });
     } else {
