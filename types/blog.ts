@@ -8,11 +8,9 @@ export interface Post {
   readingTime: number;
   featured: boolean;
   categories: string[];
-  status?: 'DRAFTED' | 'PUBLISHED';
-  author?: {
-    name: string;
-    image: string;
-  };
+  status?: "DRAFTED" | "PUBLISHED";
+  author?: string;
+  authorImg?: string;
   previousPost?: {
     title: string;
     slug: string;
@@ -30,5 +28,5 @@ export interface BlogFormData {
   tags: string[];
   coverImage: string;
   category: string;
-  status: 'draft' | 'published';
+  status: "draft" | "published";
 }

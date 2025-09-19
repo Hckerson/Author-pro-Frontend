@@ -28,10 +28,8 @@ export default async function Blog(props: { searchParams: SearchParams }) {
         readingTime: currentPost.readingTime,
         categories: currentPost.categories,
         status: currentPost.status,
-        author: {
-          name: currentPost.author,
-          image: currentPost.authorimage,
-        },
+        author: currentPost.author,
+        authorImg: currentPost.authorImg,
         previousPost:
           i > 0
             ? {

@@ -15,7 +15,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
         <li key={post.slug} className="flex gap-3">
           <div className="relative h-16 w-16 rounded overflow-hidden flex-shrink-0">
             <Image
-              src={post.coverImage}
+              src={post.coverImg}
               alt={post.title}
               fill
               className="object-cover"

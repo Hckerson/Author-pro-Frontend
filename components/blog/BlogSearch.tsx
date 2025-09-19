@@ -22,11 +22,11 @@ BlogSearch({
 
   useEffect(() => {
     setAllPost(posts);
+    console.log(posts)
   }, []);
 
   const handleSearch = () => {
     if (searchTerm.length < 1) setPost(allPost || [])
-    console.log("Searching for:", searchTerm);
     // TODO: Implement search functionality
     const post = allPost?.filter((post) => {
       return [post.author, ...post.categories, post.slug, post.title].some((r) =>

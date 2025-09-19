@@ -30,13 +30,15 @@ export async function generateMetadata({
 }
 
 export default async function BlogPostPage({
-  params
+  params,
 }: {
   params: { slug: string };
 }) {
   const { slug } = await params;
   const response = await axios.get(`http://localhost:4000/posts/${slug}`);
-  const post: Post = response.data;
+  const { post, relatedPost }: { post: Post; relatedPost: Post[] } =
+    response.data;
+
   if (!post) {
     return notFound();
   }
@@ -94,14 +96,11 @@ export default async function BlogPostPage({
 
               <div className="mt-12 flex items-center p-6 bg-muted/30 rounded-lg">
                 <Avatar className="h-16 w-16 mr-6">
-                  <AvatarImage
-                    src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
-                    alt="Author"
-                  />
+                  <AvatarImage src={post.authorImg} alt="Author" />
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="text-xl font-bold mb-2">John Doe</h3>
+                  <h3 className="text-xl font-bold mb-2">{post.author}</h3>
                   <p className="text-muted-foreground">
                     Author, blogger, and storyteller passionate about crafting
                     narratives that inspire and connect.
@@ -160,12 +159,12 @@ export default async function BlogPostPage({
                   </div>
                 </div>
 
-                {/* {relatedPosts.length > 0 && (
+                {relatedPost.length > 0 && (
                   <div className="bg-card rounded-lg shadow-md p-6">
                     <h3 className="text-lg font-medium mb-4">Related Posts</h3>
-                    <RelatedPosts posts={relatedPosts} />
+                    <RelatedPosts posts={relatedPost} />
                   </div>
-                )} */}
+                )}
               </div>
             </div>
           </div>
